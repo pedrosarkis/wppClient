@@ -39,18 +39,4 @@ client.on('ready', async () => {
 
 
 })
-
-client.on('message', (message) => {
-    if(message.body === 'Hi') {
-        message.reply('Hello')
-    }
-})
-
 client.initialize()
-
-// ;(async () => {
-   
-
-   
-    
-// })()
