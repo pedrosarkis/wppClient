@@ -6,8 +6,7 @@ const mime = require('mime-types')
 const client = new Client({
     puppeteer: {
         headless: false,
-    },
-    authStrategy: new LocalAuth(),
+    }
 })
 
 client.on('qr', (qr) => {
