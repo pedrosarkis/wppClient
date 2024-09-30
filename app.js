@@ -14,6 +14,10 @@ client.on('qr', (qr) => {
     console.log('QR RECEIVED', qr)
 })
 
+const waitTime = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000]
+
+const wait = (time) => new Promise((resolve) => setTimeout(resolve, time))
+
 client.on('ready', async () => {
     console.log('Client is ready!')
     const message = fs.readFileSync('./contacts/message.txt', 'utf8')
@@ -24,18 +28,21 @@ client.on('ready', async () => {
         return new MessageMedia(mime.lookup(media), mediaToSend.toString('base64'), media)
     })
 
-    contactList.forEach(async contact => {
-        const {plainNumber, secondaryNumber} = formatPhoneNumber(contact.telefone)
-        const chatId = `${plainNumber}@c.us`
-        const secondaryChatId = `${secondaryNumber}@c.us`
-
-        await client.sendMessage(chatId, message)
-        await client.sendMessage(secondaryChatId, message)
-        getAllMediaFromPath.forEach(async media => {
-            await client.sendMessage(chatId, media)
-            await client.sendMessage(secondaryChatId, media)
-        })
-    })
+    for (const contact of contactList) {
+        const {plainNumber, secondaryNumber} = formatPhoneNumber(contact.telefone);
+        const chatId = `${plainNumber}@c.us`;
+        const secondaryChatId = `${secondaryNumber}@c.us`;
+    
+        await client.sendMessage(chatId, message);
+        await client.sendMessage(secondaryChatId, message);
+    
+        for (const media of getAllMediaFromPath) {
+            await client.sendMessage(chatId, media);
+            await client.sendMessage(secondaryChatId, media);
+        }
+    
+        await wait(waitTime[Math.floor(Math.random() * waitTime.length)]);
+    }
 
 
 })
